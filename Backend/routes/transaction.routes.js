@@ -6,7 +6,7 @@ const router=Router()
 router.get("/",getListOfTransactions)
 router.get("/:id",getTransaction)
 router.post("/add",addTransactions)
-router.put("/:id",updateTransaction)
+router.patch("/:id",updateTransaction)
 router.delete("/:id",deleteTransaction)
 
 
