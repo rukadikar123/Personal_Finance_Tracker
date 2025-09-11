@@ -2,7 +2,8 @@ import { Transaction } from "../model/transaction.schema.js";
 
 export const getListOfTransactions = async (req, res) => {
   try {
-    const listOfTransactions = await Transaction.find();
+    
+    const listOfTransactions = await Transaction.findById();
 
     if (listOfTransactions.length === 0) {
       return res.status(400).json({
