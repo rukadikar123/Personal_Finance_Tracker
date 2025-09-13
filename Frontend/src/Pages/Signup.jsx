@@ -10,11 +10,12 @@ function Signup() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  // Update local form state when inputs change
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -24,9 +25,9 @@ function Signup() {
         { withCredentials: true }
       );
       console.log(res);
-      dispatch(setUser(res?.data?.user)); 
+      dispatch(setUser(res?.data?.user)); // Store newly registered user in redux
       toast("Signup successfull!");
-      navigate("/"); 
+      navigate("/");
     } catch (error) {
       console.log(error);
       toast.error(error?.response?.data?.message);

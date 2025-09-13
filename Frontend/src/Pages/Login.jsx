@@ -8,12 +8,14 @@ import { setUser } from "../Redux/authSlice";
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" }); // state to store email and password input
   const navigate = useNavigate();
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
+  // Update form state when input fields change
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // Handle login form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -22,8 +24,8 @@ function Login() {
         form,
         { withCredentials: true }
       );
-        dispatch(setUser(res?.data?.user)); 
-        navigate("/")
+      dispatch(setUser(res?.data?.user)); // Store logged-in user in redux
+      navigate("/");
       toast("Login successfull!");
     } catch (error) {
       console.log(error);

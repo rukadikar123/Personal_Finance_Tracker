@@ -1,17 +1,19 @@
 import { Transaction } from "../model/transaction.schema.js";
 
+// Controller function to fetch the list of transactions for the logged-in user
+
 export const getListOfTransactions = async (req, res) => {
   try {
-    
-    const listOfTransactions = await Transaction.findById();
+        // Fetch transactions from the database where the user ID matches the logged-in user
+    const listOfTransactions = await Transaction.find({user:req.user._id});
 
     if (listOfTransactions.length === 0) {
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: "Transactions not found",
       });
     }
-
+    // If transactions are found, send them in the response along with a success message
     return res.status(200).json({
       success: true,
       listOfTransactions,
@@ -25,43 +27,12 @@ export const getListOfTransactions = async (req, res) => {
   }
 };
 
-export const getTransaction = async (req,res) => {
-  try {
-    const { id: transactionId } = req.params;
-
-    if (!transactionId) {
-      return res.status(400).json({
-        success: false,
-        message: "Transaction ID is required",
-      });
-    }
-
-    const transaction = await Transaction.findById(transactionId);
-
-    if (!transaction) {
-      return res.status(404).json({
-        success: false,
-        message: "Transaction not found",
-      });
-    }
-
-    return res.status(200).json({
-      success: true,
-      transaction,
-      message: "Transaction Fetched successfully",
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: `getTransaction: ${error.message}`,
-    });
-  }
-};
-
+// Controller function to add a new transaction for the logged-in user
 export const addTransactions = async (req,res) => {
   try {
-    let { title, amount, date, category } = req.body;
+    let { title, amount, date, category } = req.body;       // Destructure transaction details from request body
 
+     // Validate input fields
     if (
       [title, date, category].some(
         (elem) => typeof elem !== "string" || elem.trim() === ""
@@ -77,11 +48,13 @@ export const addTransactions = async (req,res) => {
       });
     }
 
+      // Create a new transaction in the database
     let newTransaction=await Transaction.create({
         title,
         amount,
         date,
-        category
+        category,
+        user:req.user._id
     })
 
     return res.status(201).json({
@@ -97,11 +70,13 @@ export const addTransactions = async (req,res) => {
   }
 };
 
+// Controller function to update a transaction by its ID
 export const updateTransaction = async (req,res) => {
   try {
-    const {id:transactionId}=req.params
+    const {id:transactionId}=req.params       // Get transactionId from route parameters
     let updates=req.body
 
+        // Validate that some update data is provided
     if(!updates ||  Object.keys(updates).length===0){
       return res.status(400).json({
         success:false,
@@ -109,6 +84,7 @@ export const updateTransaction = async (req,res) => {
       })
     }
 
+        // Validate amount field if it exists
     if(updates.amount !== undefined && isNaN(updates.amount)){
       return res.status(400).json({
         success: false,
@@ -116,6 +92,7 @@ export const updateTransaction = async (req,res) => {
       });
     }
 
+    // Find the transaction by ID and update it
     let updatedTransaction=await Transaction.findByIdAndUpdate(transactionId,updates,{new:true,  runValidators: true })
 
      if (!updatedTransaction) {
@@ -139,9 +116,10 @@ export const updateTransaction = async (req,res) => {
   }
 };
 
+// Controller function to delete a transaction by its ID
 export const deleteTransaction = async (req,res) => {
   try {
-    let { id: transactionId } = req.params;
+    let { id: transactionId } = req.params;       // Get transactionId from route parameters
 
     if (!transactionId) {
       return res.status(400).json({
@@ -149,7 +127,7 @@ export const deleteTransaction = async (req,res) => {
         message: "Transaction ID is required",
       });
     }
-
+    // Find the transaction by ID and delete it
     const deletedTransaction = await Transaction.findByIdAndDelete(
       transactionId
     );
