@@ -1,4 +1,4 @@
-import { Transaction } from "../model/Transaction.schema";
+import { Transaction } from "../model/Transaction.schema.js";
 
 // Controller function to fetch the list of transactions for the logged-in user
 
