@@ -23,6 +23,7 @@ function useGetUser() {
       } catch (error) {
         console.log(error);
         dispatch(setLoading(false));
+        dispatch(setUser(null));
       } finally {
         dispatch(setLoading(false));
       }

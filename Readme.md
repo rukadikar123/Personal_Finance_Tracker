@@ -4,6 +4,8 @@ A full-stack web application to track your income and expenses, built with React
 
 ---
 [Deployed URL](https://personal-finance-tracker-frontend-13ka.onrender.com)
+Note: This app is hosted on Render (free tier).
+The backend spins down after inactivity, so the first request may take 10-20 seconds to load.
 
 ## Backend
 
